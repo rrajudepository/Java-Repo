@@ -1,0 +1,24 @@
+# 🧩 Exception Handling in Java using `throws`
+
+---
+
+## 🔹 1. What is `throws`?
+
+The `throws` keyword in Java is used **in a method declaration** to specify that the method **might throw certain exceptions**, and the **caller of the method** is responsible for handling them.
+
+In short:
+
+> `throws` is used to declare exceptions — not handle them.
+
+---
+
+## 🔹 2. Syntax
+
+```java
+returnType methodName(parameters) throws ExceptionType1, ExceptionType2 {
+    // method code
+}
+public void readFile(String fileName) throws IOException {
+    FileReader fr = new FileReader(fileName);
+    // code to read file
+}
