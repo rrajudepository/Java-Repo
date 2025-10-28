@@ -1,24 +1,196 @@
-# 🧩 Exception Handling in Java using `throws`
+🧩 Exception Handling in Java using throws
 
----
+-------------------------------------------------------------
+1. What is throws?
+-------------------------------------------------------------
+The 'throws' keyword in Java is used in a method declaration to specify that the method might throw certain exceptions, and the caller of the method is responsible for handling them.
 
-## 🔹 1. What is `throws`?
+→ 'throws' is used to declare exceptions, not to handle them.
 
-The `throws` keyword in Java is used **in a method declaration** to specify that the method **might throw certain exceptions**, and the **caller of the method** is responsible for handling them.
-
-In short:
-
-> `throws` is used to declare exceptions — not handle them.
-
----
-
-## 🔹 2. Syntax
-
-```java
+-------------------------------------------------------------
+2. Syntax
+-------------------------------------------------------------
 returnType methodName(parameters) throws ExceptionType1, ExceptionType2 {
     // method code
 }
+
+Example:
 public void readFile(String fileName) throws IOException {
     FileReader fr = new FileReader(fileName);
     // code to read file
 }
+
+-------------------------------------------------------------
+3. How it Works — Example
+-------------------------------------------------------------
+❌ Without handling (Compilation Error)
+
+import java.io.*;
+
+class Demo {
+    static void readFile() throws IOException {
+        FileReader fr = new FileReader("abc.txt");
+        fr.read();
+        fr.close();
+    }
+
+    public static void main(String[] args) {
+        readFile(); // Compile-time error — must handle IOException
+    }
+}
+
+Explanation:
+- FileReader can throw FileNotFoundException and IOException.
+- Since readFile() declares throws IOException, the exception is propagated to the caller (main).
+- main() must handle or declare it — otherwise, compilation fails.
+
+-------------------------------------------------------------
+✅ 4. Correct Example — Handle using try-catch
+-------------------------------------------------------------
+import java.io.*;
+
+class Demo {
+    static void readFile() throws IOException {
+        FileReader fr = new FileReader("abc.txt");
+        fr.read();
+        fr.close();
+    }
+
+    public static void main(String[] args) {
+        try {
+            readFile();  // handled properly
+        } catch (IOException e) {
+            System.out.println("File error: " + e.getMessage());
+        }
+    }
+}
+
+-------------------------------------------------------------
+5. Why Use throws?
+-------------------------------------------------------------
+Use 'throws' when:
+- You don’t want to handle the exception inside a method.
+- You want to delegate responsibility to the calling method.
+- Common in library or utility methods.
+
+-------------------------------------------------------------
+6. Checked vs Unchecked Exceptions
+-------------------------------------------------------------
+Type: Checked exceptions
+Example: IOException, SQLException, FileNotFoundException
+Must be declared with throws: YES
+
+Type: Unchecked exceptions
+Example: NullPointerException, ArithmeticException, ArrayIndexOutOfBoundsException
+Must be declared with throws: NO
+
+-------------------------------------------------------------
+7. Declaring Multiple Exceptions
+-------------------------------------------------------------
+public void processData() throws IOException, SQLException {
+    // code
+}
+
+Handling multiple exceptions:
+try {
+    processData();
+} catch (IOException | SQLException e) {
+    e.printStackTrace();
+}
+
+-------------------------------------------------------------
+8. Example — Custom Exception with throws
+-------------------------------------------------------------
+class InvalidAgeException extends Exception {
+    public InvalidAgeException(String message) {
+        super(message);
+    }
+}
+
+class VotingApp {
+    static void checkAge(int age) throws InvalidAgeException {
+        if (age < 18)
+            throw new InvalidAgeException("Not eligible to vote");
+        else
+            System.out.println("Eligible to vote");
+    }
+
+    public static void main(String[] args) {
+        try {
+            checkAge(15);
+        } catch (InvalidAgeException e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
+    }
+}
+
+Output:
+Exception: Not eligible to vote
+
+-------------------------------------------------------------
+9. throw vs throws
+-------------------------------------------------------------
+throw → Used inside a method to actually throw an exception
+throws → Used in method signature to declare possible exceptions
+
+-------------------------------------------------------------
+10. Exception Propagation
+-------------------------------------------------------------
+When an exception occurs:
+1. The method where it occurs throws it.
+2. If not caught, it moves to the caller method.
+3. If still not handled, it propagates up the call stack.
+4. If no method handles it, JVM handles it → program terminates.
+
+Example Flow:
+main() → calls → readFile() → throws IOException → handled in main()
+
+If main() doesn’t handle it, JVM prints stack trace and exits.
+
+-------------------------------------------------------------
+Key Notes
+-------------------------------------------------------------
+- throws is used for checked exceptions.
+- It provides transparency to the caller.
+- Makes code cleaner by separating logic and error handling.
+- Common in I/O, SQL, and networking code.
+
+-------------------------------------------------------------
+Complete Summary
+-------------------------------------------------------------
+Purpose of throws: Declares exceptions that might occur in a method
+When used: When method doesn’t want to handle exception
+Who handles it: Caller method
+Mandatory for: Checked exceptions
+Optional for: Unchecked exceptions
+Can declare multiple: Yes
+Common usage: I/O, JDBC, networking
+Difference from throw: throw actually throws; throws declares
+
+-------------------------------------------------------------
+Example Recap
+-------------------------------------------------------------
+Example 1 — Basic File I/O
+static void readFile() throws IOException { ... }
+
+Example 2 — Custom Exception
+static void checkAge(int age) throws InvalidAgeException { ... }
+
+Example 3 — Multiple Exceptions
+public void processData() throws IOException, SQLException { ... }
+
+-------------------------------------------------------------
+Related Topics
+-------------------------------------------------------------
+- try, catch, finally
+- throw keyword
+- Custom exceptions
+- Exception hierarchy
+- Checked vs Unchecked exceptions
+- Exception propagation
+
+-------------------------------------------------------------
+✨ Key Takeaway
+-------------------------------------------------------------
+Use 'throws' when you want to declare that a method might cause certain checked exceptions,
+and you want the caller to handle them, not the method itself.
